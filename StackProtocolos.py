@@ -78,34 +78,32 @@ class CapaPresentacion():
          del d
          del b
          del callable
+    def desencriptar(mensaje, d):
+        i = 0
+        j = 0
 
+        b = ""
 
-        def desencriptar(msg, d):
-            i = 0
-            j = 0
+        c = ''
 
-            b = ""
-
-            c = ''
-
-            contenido = msg
-            
-            while i < len(contenido):
-                    c = contenido[i]
-                    if (ord(c) >= 65 and ord(c) <= 90):
-                            c = ord(c) - (ord(d[j])-48)
-                            if c < 65:
-                                    c = c - 64 + 90
-                    elif ord(c) == 126:
-                            c = 32
-                    b = b + chr(c)
-                    i = i + 1
-                    if j<2:
-                            j = j+1
-                    else:
-                            j = 0
-            print (b)
-            return b
+        contenido = mensaje
+        
+        while i < len(contenido):
+                c = contenido[i]
+                if (ord(c) >= 65 and ord(c) <= 90):
+                        c = ord(c) - (ord(d[j])-48)
+                        if c < 65:
+                                c = c - 64 + 90
+                elif ord(c) == 126:
+                        c = 32
+                b = b + chr(c)
+                i = i + 1
+                if j<2:
+                        j = j+1
+                else:
+                        j = 0
+        print (b)
+        return b
         
 #############main##############
 CA = CapaAplicacion()
