@@ -1,4 +1,7 @@
 from tkinter import *
+import socket
+import os
+import time
 
 cadenaTexto = ""
 
@@ -7,32 +10,32 @@ cadenaTexto = ""
     
 class CapaAplicacion():
     mensaje = ""
+    host = ""
+    puerto = ""
+    modo = ""
+
     def VentanaCliente(self, _window):
+        self.modo = "cliente"
+        print("modo cliente == "+ self.modo)
         _window.destroy()
         window = Tk()
         window.title("Cliente")
         window.geometry("425x200+300+300")
         
-        #Label 1
+      
         label1 = Label(window, text = "")
         label1.grid(row = 1, column = 1)
-        #Label 1
         label2 = Label(window, text = "")
         label2.grid(row = 2, column = 1)
-        #Label 1
         label3 = Label(window, text = "")
         label3.grid(row = 3, column = 1)
-        #Label 1
         label = Label(window, text = "Digite el mensaje que desea enviar:")
         label.grid(row = 4, column = 0)
-        #Label 2
         label = Label(window, text = "Host:")
         label.grid(row = 5, column = 0)
-        #Label 3
         label = Label(window, text = "Puerto:")
         label.grid(row = 6, column = 0)
         
-
         #TextboxMensaje
         texto = Entry(window, width = 30)
         texto.grid(row = 4, column = 1)
@@ -44,22 +47,45 @@ class CapaAplicacion():
         textoPuerto.grid(row = 6, column = 1)
 
         #Boton
-        botonAceptar = Button(window, text = "Aceptar", command = lambda: self.ObtenerMensaje(texto.get()))
+        botonAceptar = Button(window, text = "Aceptar", command = lambda: self.ObtenerMensaje(texto.get(),textoHost.get(),textoPuerto.get()))
         botonAceptar.grid(row = 9, column = 1)
-
+               
         window.mainloop
+        
+        
     
     def VentanaServidor(self, _window):
+        self.modo = "servidor"
+        print("modo servidor == "+ self.modo)
+          
         _window.destroy()
         window = Tk()
         window.title("Servidor")
         window.geometry("425x200+300+300")
         
+        CR = CapaRed()
+        CR.modo = self.modo
+        CR.host = self.host
+        CR.puerto = self.puerto
+        print("modo "+ self.modo)
+        CR.modalidad()
+        
         window.mainloop
         
-    def ObtenerMensaje(self, texto):
+    def ObtenerMensaje(self, texto, host_, puerto_):
         print(texto)
         self.mensaje = texto
+        self.host = host_
+        print(host_)
+        self.puerto = puerto_
+        print(puerto_)
+        
+        CR = CapaRed()
+        CR.modo = self.modo
+        CR.host = self.host
+        CR.puerto = self.puerto
+        print("modo "+ self.modo)
+        CR.modalidad()
         
     def graf(self): 
         #Ventana
@@ -93,6 +119,7 @@ class CapaAplicacion():
         botonServidor = Button(window, text = "Modo Servidor", command = lambda: self.VentanaServidor(window))
         botonServidor.grid(row = 5, column = 4)
         window.mainloop()
+        
         
      
 class CapaPresentacion():
@@ -168,12 +195,69 @@ class CapaPresentacion():
         print (b)
         return b
         
+        
+        
+class CapaRed():
+    
+    host = ""
+    puerto = ""
+    texto = ""
+    modo = ""
+    
+    def modalidad(self):
+        if (self.modo == "cliente"):
+            print("If de modalidad cliente")
+            self.iniciarCliente()
+
+        if (self.modo == "servidor"):
+            print("If de modalidad servidor")
+            self.iniciarServidor()
+
+
+    
+    def iniciarCliente(self):
+        print("Cliente inicializado")
+        print("host --> "+ self.host)
+        print("puerto --> "+ self.puerto)
+        print("\n\n")
+        
+        c = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #objetoSocket 
+        c.connect((self.host,int(self.puerto)))
+        texto = c.recv(1024)
+        #print (texto.decode('utf8'))
+        c.send(texto)
+        c.close()   
+        del c
+        
+    def iniciarServidor(self):
+        print("Servidor inicializado")
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.bind((self.host, 4440))
+        s.listen(10) #num max conectados al servidor
+         
+        print("Esperando conexion remota...")
+        (c, addr) = s.accept()
+        print("Se establecio conexion con: %s" % str(addr))
+            
+        msg = 'Conexion establecida con : %s' % socket.gethostname() + "\r\n"
+        c.send(msg.encode('utf8'))
+        mensajeRecibido = c.recv(1024)
+        print("JEFF GUAPO")
+        print(mensajeRecibido) 
+        
+        s.close()
+        del c
+        del s
+       
+        #return mensajeRecibido    
+
+
+        
 #############main###############
 CA = CapaAplicacion()
 CA.graf()
 CP = CapaPresentacion
 CP.mensaje = CA.mensaje
-
 
 
     
