@@ -11,12 +11,10 @@ cadenaTexto = ""
 class CapaAplicacion():
     mensaje = ""
     host = ""
-    puerto = ""
+    puerto = 4440
     modo = ""
 
     def VentanaCliente(self, _window):
-        self.modo = "cliente"
-        print("modo cliente == "+ self.modo)
         _window.destroy()
         window = Tk()
         window.title("Cliente")
@@ -39,13 +37,15 @@ class CapaAplicacion():
         #TextboxMensaje
         texto = Entry(window, width = 30)
         texto.grid(row = 4, column = 1)
+        texto.insert(0, "Holiwis")
         #TextboxHost
         textoHost = Entry(window, width = 30)
         textoHost.grid(row = 5, column = 1)
+        textoHost.insert(0, "192.168.100.32")
         #TextboxPuerto
         textoPuerto = Entry(window, width = 30)
         textoPuerto.grid(row = 6, column = 1)
-
+        textoPuerto.insert(0, "4440")
         #Boton
         botonAceptar = Button(window, text = "Aceptar", command = lambda: self.ObtenerMensaje(texto.get(),textoHost.get(),textoPuerto.get()))
         botonAceptar.grid(row = 9, column = 1)
@@ -53,11 +53,13 @@ class CapaAplicacion():
         window.mainloop
         
         
-    
+    def mostrarMensaje(self, _window, CapaRed):
+        
+        label = Label(_window, text = CapaRed.mensajeRecibido)
+        label.grid(row = 3, column = 1)
+        
     def VentanaServidor(self, _window):
-        self.modo = "servidor"
-        print("modo servidor == "+ self.modo)
-          
+    
         _window.destroy()
         window = Tk()
         window.title("Servidor")
@@ -67,8 +69,11 @@ class CapaAplicacion():
         CR.modo = self.modo
         CR.host = self.host
         CR.puerto = self.puerto
-        print("modo "+ self.modo)
-        CR.modalidad()
+        CR.definirModalidad()
+    
+        label = Label(window, text = "Mensaje recibido: ")
+        label.grid(row = 3, column = 0)
+        
         
         window.mainloop
         
@@ -84,8 +89,8 @@ class CapaAplicacion():
         CR.modo = self.modo
         CR.host = self.host
         CR.puerto = self.puerto
-        print("modo "+ self.modo)
-        CR.modalidad()
+        CR.texto = self.mensaje
+        CR.definirModalidad()
         
     def graf(self): 
         #Ventana
@@ -200,11 +205,13 @@ class CapaPresentacion():
 class CapaRed():
     
     host = ""
-    puerto = ""
+    puerto = 4440
     texto = ""
     modo = ""
+    mensajeRecibido = ""
+    CapaRed = null
     
-    def modalidad(self):
+    def definirModalidad(self):
         if (self.modo == "cliente"):
             print("If de modalidad cliente")
             self.iniciarCliente()
@@ -213,46 +220,89 @@ class CapaRed():
             print("If de modalidad servidor")
             self.iniciarServidor()
 
-
-    
     def iniciarCliente(self):
-        print("Cliente inicializado")
-        print("host --> "+ self.host)
-        print("puerto --> "+ self.puerto)
-        print("\n\n")
+        # print("Cliente inicializado")
+        # print("host --> "+ self.host)
+        # print("puerto --> "+ self.puerto)
+        # print("\n\n")
         
-        c = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #objetoSocket 
-        c.connect((self.host,int(self.puerto)))
-        texto = c.recv(1024)
-        #print (texto.decode('utf8'))
-        c.send(texto)
-        c.close()   
-        del c
+        # c = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #objetoSocket 
+        # c.connect((self.host,int(self.puerto)))
+        # texto = c.recv(1024)
+        # #print (texto.decode('utf8'))
+        # c.send(texto)
+        # c.close()   
+        # del c
+        
+        # Create a TCP/IP socket
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        # Connect the socket to the port where the server is listening
+        server_address = (self.host, 4440)
+        print('connecting to {} port {}'.format(*server_address))
+        sock.connect(server_address)
+        try:
+
+            # Send data
+            message = self.texto.encode()
+            print(self.texto)
+            print('sending {!r}'.format(message))
+            sock.sendall(message)
+
+            # Look for the response
+            amount_received = 0
+            amount_expected = len(message)
+
+            # while amount_received < amount_expected:
+                # data = sock.recv(16)
+                # amount_received += len(data)
+                # print('received {!r}'.format(data))
+
+        finally:
+            print('closing socket')
+            sock.close()
         
     def iniciarServidor(self):
-        print("Servidor inicializado")
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind((self.host, 4440))
-        s.listen(10) #num max conectados al servidor
-         
-        print("Esperando conexion remota...")
-        (c, addr) = s.accept()
-        print("Se establecio conexion con: %s" % str(addr))
-            
-        msg = 'Conexion establecida con : %s' % socket.gethostname() + "\r\n"
-        c.send(msg.encode('utf8'))
-        mensajeRecibido = c.recv(1024)
-        print("JEFF GUAPO")
-        print(mensajeRecibido) 
         
-        s.close()
-        del c
-        del s
-       
-        #return mensajeRecibido    
-
-
         
+        # Create a TCP/IP socket
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        # Bind the socket to the port
+        server_address = (self.host, self.puerto)
+        print('starting up on {} port {}'.format(*server_address))
+        sock.bind(server_address)
+
+        # Listen for incoming connections
+        sock.listen(5)
+
+        while True:
+            # Wait for a connection
+            print('waiting for a connection')
+            connection, client_address = sock.accept()
+            try:
+                print('connection from', client_address)
+
+                # Receive the data in small chunks and retransmit it
+                #while True:
+                data = connection.recv(168)
+                self.mensajeRecibido = data.decode()
+                
+                #print('El mensaje recibido es {!r}'.format(data))
+                
+                # if data:
+                    # print('sending data back to the client')
+                    # connection.sendall(data)
+                # else:
+                    # print('no data from', client_address)
+                    # break
+
+            finally:
+                # Clean up the connection
+                connection.close()
+        
+        
+ 
 #############main###############
 CA = CapaAplicacion()
 CA.graf()
