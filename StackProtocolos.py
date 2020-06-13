@@ -1,19 +1,50 @@
 from tkinter import *
+from tkinter import messagebox
 import socket
 import os
 import time
+import threading
 
-cadenaTexto = ""
-
-
-
-    
 class CapaAplicacion():
     mensaje = ""
     host = ""
     puerto = 4440
     modo = ""
+    flag = False
+    def graf(self): 
+        #Ventana
+        window = Tk()
+        window.title("Stack de Protocolos")
+        window.geometry("425x200+300+300")
+        
+        #Label 1
+        label1 = Label(window, text = "")
+        label1.grid(row = 1, column = 1)
+        #Label 1
+        label2 = Label(window, text = "")
+        label2.grid(row = 3, column = 1)
+        #Label 1
+        label3 = Label(window, text = "")
+        label3.grid(row = 4, column = 1)
+        #Label 1
+        label4 = Label(window, text = "")
+        label4.grid(row = 5, column = 1)
+        
+        #Label 1
+        labelCliente = Label(window, text = "           Cliente: Enviar el mensaje           ")
+        labelCliente.grid(row = 2, column = 1)
+        #Label 1
+        labelServidor = Label(window, text = "      Servidor: Recibir el mensaje       ")
+        labelServidor.grid(row = 2, column = 4)
 
+        botonCliente = Button(window, text = "Modo Cliente", command = lambda: self.VentanaCliente(window))
+        botonCliente.grid(row = 5, column = 1)
+        
+        botonServidor = Button(window, text = "Modo Servidor", command = lambda: self.VentanaServidor(window))
+        botonServidor.grid(row = 5, column = 4)
+        window.mainloop()
+        
+        
     def VentanaCliente(self, _window):
         _window.destroy()
         window = Tk()
@@ -50,83 +81,58 @@ class CapaAplicacion():
         botonAceptar = Button(window, text = "Aceptar", command = lambda: self.ObtenerMensaje(texto.get(),textoHost.get(),textoPuerto.get()))
         botonAceptar.grid(row = 9, column = 1)
                
-        window.mainloop
-        
-        
-    def mostrarMensaje(self, _window, CapaRed):
-        
-        label = Label(_window, text = CapaRed.mensajeRecibido)
-        label.grid(row = 3, column = 1)
-        
+        window.mainloop()
+
     def VentanaServidor(self, _window):
-    
         _window.destroy()
         window = Tk()
         window.title("Servidor")
         window.geometry("425x200+300+300")
         
-        CR = CapaRed()
-        CR.modo = self.modo
-        CR.host = self.host
-        CR.puerto = self.puerto
-        CR.definirModalidad()
-    
-        label = Label(window, text = "Mensaje recibido: ")
-        label.grid(row = 3, column = 0)
-        
-        
-        window.mainloop
-        
-    def ObtenerMensaje(self, texto, host_, puerto_):
-        print(texto)
-        self.mensaje = texto
-        self.host = host_
-        print(host_)
-        self.puerto = puerto_
-        print(puerto_)
+        label = Label(window, text = "Esperando Conexión")
+        label.grid(row = 0, column = 0)
         
         CR = CapaRed()
-        CR.modo = self.modo
+        CR.modo = "servidor"
         CR.host = self.host
-        CR.puerto = self.puerto
-        CR.texto = self.mensaje
-        CR.definirModalidad()
+        CR.puerto = self.puerto  
         
-    def graf(self): 
-        #Ventana
-        window = Tk()
-        window.title("Stack de Protocolos")
-        window.geometry("425x200+300+300")
+        t = threading.Thread(target=CR.definirModalidad)
+        t.start()
         
-        #Label 1
-        label1 = Label(window, text = "")
-        label1.grid(row = 1, column = 1)
-        #Label 1
-        label2 = Label(window, text = "")
-        label2.grid(row = 3, column = 1)
-        #Label 1
-        label3 = Label(window, text = "")
-        label3.grid(row = 4, column = 1)
-        #Label 1
-        label4 = Label(window, text = "")
-        label4.grid(row = 5, column = 1)
-        
-        #Label 1
-        labelCliente = Label(window, text = "           Cliente: Enviar el mensaje           ")
-        labelCliente.grid(row = 2, column = 1)
-        #Label 1
-        labelServidor = Label(window, text = "      Servidor: Recibir el mensaje       ")
-        labelServidor.grid(row = 2, column = 4)
-
-        botonCliente = Button(window, text = "Modo Cliente", command = lambda: self.VentanaCliente(window))
-        botonCliente.grid(row = 5, column = 1)
-        
-        botonServidor = Button(window, text = "Modo Servidor", command = lambda: self.VentanaServidor(window))
-        botonServidor.grid(row = 5, column = 4)
+        t2 = threading.Thread(target = self.mostrarMensaje, args = (window, CR, ))
+        t2.start()
+         
         window.mainloop()
         
+    def mostrarMensaje(self, window, CR):
+        while(True):
+                if(CR.mensajeRecibido != ""):
+                    label = Label(window, text = "Mensaje recibido: " + CR.mensajeRecibido)
+                    label.grid(row = 3, column = 0)
+                    CR.mensajeRecibido = ""
+                    label = Label(window, text = "Conexión realizada con éxito")
+                    label.grid(row = 0, column = 0)
+                    
+                
+    def ObtenerMensaje(self, texto, host_, puerto_):
         
-     
+        if(texto == "" or host_ == "" or puerto_ == ""):
+            messagebox.showerror(title = "Error", message = "Todos los campos deben llenarse")
+        else:        
+            self.mensaje = texto
+            self.host = host_
+            print(host_)
+            self.puerto = puerto_   
+            print(puerto_)
+         
+            CR = CapaRed()
+            CR.modo = "cliente"
+            CR.host = self.host
+            CR.puerto = self.puerto
+            CR.texto = self.mensaje
+            CR.definirModalidad()
+
 class CapaPresentacion():
     mensaje = ""
     
@@ -209,9 +215,11 @@ class CapaRed():
     texto = ""
     modo = ""
     mensajeRecibido = ""
-    CapaRed = null
+    msgReceived = False
+    
     
     def definirModalidad(self):
+        print(self.modo)
         if (self.modo == "cliente"):
             print("If de modalidad cliente")
             self.iniciarCliente()
@@ -221,28 +229,15 @@ class CapaRed():
             self.iniciarServidor()
 
     def iniciarCliente(self):
-        # print("Cliente inicializado")
-        # print("host --> "+ self.host)
-        # print("puerto --> "+ self.puerto)
-        # print("\n\n")
-        
-        # c = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #objetoSocket 
-        # c.connect((self.host,int(self.puerto)))
-        # texto = c.recv(1024)
-        # #print (texto.decode('utf8'))
-        # c.send(texto)
-        # c.close()   
-        # del c
-        
         # Create a TCP/IP socket
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         # Connect the socket to the port where the server is listening
         server_address = (self.host, 4440)
         print('connecting to {} port {}'.format(*server_address))
-        sock.connect(server_address)
+        
         try:
-
+            sock.connect(server_address)
             # Send data
             message = self.texto.encode()
             print(self.texto)
@@ -252,19 +247,19 @@ class CapaRed():
             # Look for the response
             amount_received = 0
             amount_expected = len(message)
-
-            # while amount_received < amount_expected:
-                # data = sock.recv(16)
-                # amount_received += len(data)
-                # print('received {!r}'.format(data))
-
+            
+            messagebox.showinfo(title = None, message = "El mensaje ha sido enviado")
+            
+        except ConnectionRefusedError:
+            messagebox.showerror(title = "Error", message = "El mensaje no ha sido enviado")
+            
         finally:
             print('closing socket')
             sock.close()
         
     def iniciarServidor(self):
         
-        
+        self.msgReceived = False
         # Create a TCP/IP socket
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -272,10 +267,10 @@ class CapaRed():
         server_address = (self.host, self.puerto)
         print('starting up on {} port {}'.format(*server_address))
         sock.bind(server_address)
-
+        
         # Listen for incoming connections
         sock.listen(5)
-
+        
         while True:
             # Wait for a connection
             print('waiting for a connection')
@@ -283,19 +278,8 @@ class CapaRed():
             try:
                 print('connection from', client_address)
 
-                # Receive the data in small chunks and retransmit it
-                #while True:
                 data = connection.recv(168)
                 self.mensajeRecibido = data.decode()
-                
-                #print('El mensaje recibido es {!r}'.format(data))
-                
-                # if data:
-                    # print('sending data back to the client')
-                    # connection.sendall(data)
-                # else:
-                    # print('no data from', client_address)
-                    # break
 
             finally:
                 # Clean up the connection
