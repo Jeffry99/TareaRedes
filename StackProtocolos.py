@@ -7,16 +7,18 @@ import threading
 
 class CapaAplicacion():
     mensaje = ""
+    mssg = ""
     host = ""
     puerto = 4440
     modo = ""
     contClick = 0
+    listaImagenes = []
+    
     def graf(self): 
         #Ventana
         window = Tk()
         window.title("Stack de Protocolos")
         window.geometry("425x200+300+300")
-        
         #Label 1
         label1 = Label(window, text = "")
         label1.grid(row = 1, column = 1)
@@ -49,95 +51,122 @@ class CapaAplicacion():
         _window.destroy()
         window = Tk()
         window.title("Cliente")
-        window.geometry("900x400+300+300")
+        window.geometry("900x450+300+300")
+
+        frame = Frame(window)
+        frame.grid(row = 0, column = 0)
         
-      
-        label1 = Label(window, text = "")
+        frame1 = Frame(window)
+        frame1.grid(row = 1, column = 0)
+        
+        frame2 = Frame(window)
+        frame2.grid(row = 2, column = 0)
+        
+        frame3 = Frame(window)
+        frame3.grid(row = 4, column = 0)
+        
+        frame4 = Frame(window)
+        frame4.grid(row = 3, column = 0)
+        
+        label4 = Label(frame, text = "Escoja el patrón de figuras que desea enviar:")
+        label4.grid(row = 0, column = 0)     
+
+        label8 = Label(frame1, text = "                                                         ")
+        label8.grid(row = 0, column = 0)
+        label1 = Label(frame1, text = "")
         label1.grid(row = 1, column = 1)
-        labelf = Label(window, text = "     ")
+        labelf = Label(frame1, text = "     ")
         labelf.grid(row = 1, column = 3)
-        label2 = Label(window, text = "")
-        label2.grid(row = 2, column = 1)
-        label3 = Label(window, text = "")
-        label3.grid(row = 3, column = 1)
-        label = Label(window, text = "Digite el mensaje que desea enviar:")
-        label.grid(row = 4, column = 0)
-        label = Label(window, text = "Host:")
-        label.grid(row = 5, column = 0)
-        label = Label(window, text = "Puerto:")
-        label.grid(row = 6, column = 0)
+        labelf = Label(frame3, text = "     ")
+        labelf.grid(row = 0, column = 0)
+        label5 = Label(frame1, text = "Host:")
+        label5.grid(row = 5, column = 0)
+        label6 = Label(frame1, text = "Puerto:")
+        label6.grid(row = 6, column = 0)
         
-        #TextboxMensaje
-        texto = Entry(window, width = 30)
-        texto.grid(row = 4, column = 1)
-        texto.insert(0, "aaa")
-        #TextboxHost
-        textoHost = Entry(window, width = 30)
+        textoHost = Entry(frame1, width = 30)
         textoHost.grid(row = 5, column = 1)
         textoHost.insert(0, "192.168.100.32")
-        #TextboxPuerto
-        textoPuerto = Entry(window, width = 30)
+
+        textoPuerto = Entry(frame1, width = 30)
         textoPuerto.grid(row = 6, column = 1)
         textoPuerto.insert(0, "4440")
-        #Boton
-        botonAceptar = Button(window, text = "Aceptar", command = lambda: self.ObtenerMensaje(texto.get(),textoHost.get(),textoPuerto.get()))
-        botonAceptar.grid(row = 9, column = 1)
-        
-        
-        #Botones Figuras
+
         #Cambiar direccion
         #image = PhotoImage(file = r"Imagenes\Triangulo.png")
         triangulo = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Triangulo.png")
-        botonT = Button(window, image = triangulo, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "Triangulo."))
+        botonT = Button(frame1, image = triangulo, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "Triangulo.", frame2, "0"))
         botonT.grid(row = 5, column = 4)
         
         circulo = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Circulo.png")
-        botonC = Button(window, image = circulo, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "circulo."))
+        botonC = Button(frame1, image = circulo, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "circulo.", frame2, "1"))
         botonC.grid(row = 5, column = 5)
         
         cuadrado = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Cuadrado.png")
-        botonCu = Button(window, image = cuadrado, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "cuadrado."))
+        botonCu = Button(frame1, image = cuadrado, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "cuadrado.", frame2, "2"))
         botonCu.grid(row = 5, column = 6)
         
         rombo = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Rombo.png")
-        botonR = Button(window, image = rombo, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "rombo."))
+        botonR = Button(frame1, image = rombo, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "rombo.", frame2, "3"))
         botonR.grid(row = 5, column = 7)
         
         hexagono = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Hexagono.png")
-        botonH = Button(window, image = hexagono, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "hexagono."))
+        botonH = Button(frame1, image = hexagono, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "hexagono.", frame2, "4"))
         botonH.grid(row = 5, column = 8)
         
         pentagono = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Pentagono.png")
-        botonP = Button(window, image = pentagono, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "pentagono."))
+        botonP = Button(frame1, image = pentagono, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "pentagono.", frame2, "5"))
         botonP.grid(row = 6, column = 4)
         
         estrella = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\estrella.png")
-        botonE = Button(window, image = estrella, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "estrella."))
+        botonE = Button(frame1, image = estrella, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "estrella.", frame2, "6"))
         botonE.grid(row = 6, column = 5)
         
         x = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\X.png")
-        botonX = Button(window, image = x, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "x."))
+        botonX = Button(frame1, image = x, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "x.", frame2, "7"))
         botonX.grid(row = 6, column = 6)
         
         pum = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Pum.png")
-        botonPu = Button(window, image = pum, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "pum."))
+        botonPu = Button(frame1, image = pum, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "pum.", frame2, "8"))
         botonPu.grid(row = 6, column = 7)
         
         check = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Check.png")
-        botonCh = Button(window, image = check, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "check."))
+        botonCh = Button(frame1, image = check, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "check.", frame2, "9"))
         botonCh.grid(row = 6, column = 8)
         
-        window.mainloop()
+        botonBorrar = Button(frame3, text = "Borrar", command = self.borrarImagen, width = 6, height = 1)
+        botonBorrar.grid(row = 1, column = 1)
         
-    def imagSeleccionada(self, window, figura):
-        print(self.contClick)
-        img = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\\"+ figura + "png")   
-        label = Label(window, image = img)  
-        label.place(x=self.contClick, y=300)
-        self.contClick = self.contClick + 100
-        
+        botonAceptar = Button(frame3, text = "Aceptar", command = lambda: self.ObtenerMensaje(self.mssg,textoHost.get(),textoPuerto.get()))
+        botonAceptar.grid(row = 1, column = 0)
         
         window.mainloop()
+    
+    def borrarImagen(self):
+        if(len(self.listaImagenes) == 0):
+            messagebox.showwarning(title = "Atención", message = "No ha agregado ningúna figura")
+        else:    
+            self.listaImagenes[-1].grid_forget()
+            self.listaImagenes.pop()
+            self.contClick = self.contClick - 1
+            self.mssg = self.mssg[:-1]
+        
+    def imagSeleccionada(self, window, figura, frame, cod):
+        if(self.contClick < 7):
+            img = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\\"+ figura + "png")   
+            labelImagen = Label(frame, image = img)
+            labelImagen.grid(row = 0, column = self.contClick)
+            
+            self.mssg += cod
+            print(self.mssg)
+            self.listaImagenes.append(labelImagen)
+            self.contClick = self.contClick + 1
+            
+        else:  
+            messagebox.showwarning(title = "Atención", message = "Puede enviar 7 figuras como máximo")
+                
+        window.mainloop()
+
     def VentanaServidor(self, _window):
         _window.destroy()
         window = Tk()
@@ -181,6 +210,8 @@ class CapaAplicacion():
             self.puerto = puerto_   
             print(puerto_)
          
+            #enviar a capa de presentacion a codificar
+            
             CR = CapaRed()
             CR.modo = "cliente"
             CR.host = self.host
