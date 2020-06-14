@@ -49,11 +49,13 @@ class CapaAplicacion():
         _window.destroy()
         window = Tk()
         window.title("Cliente")
-        window.geometry("800x400+300+300")
+        window.geometry("900x400+300+300")
         
       
         label1 = Label(window, text = "")
         label1.grid(row = 1, column = 1)
+        labelf = Label(window, text = "     ")
+        labelf.grid(row = 1, column = 3)
         label2 = Label(window, text = "")
         label2.grid(row = 2, column = 1)
         label3 = Label(window, text = "")
@@ -82,15 +84,57 @@ class CapaAplicacion():
         botonAceptar.grid(row = 9, column = 1)
         
         
+        #Botones Figuras
         #Cambiar direccion
         #image = PhotoImage(file = r"Imagenes\Triangulo.png")
-        image = PhotoImage(file = r"C:\Users\Luis Valverde\Documents\GitHub\TareaRedes\Imagenes\Triangulo.png")
-        botonf = Button(window, text = 'Click Me !', image = image, height = 65, width = 85)
-        botonf.grid(row = 10, column = 1)
+        triangulo = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Triangulo.png")
+        botonT = Button(window, image = triangulo, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "Triangulo."))
+        botonT.grid(row = 5, column = 4)
         
-        botonAceptar.grid(row = 9, column = 1)
+        circulo = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Circulo.png")
+        botonC = Button(window, image = circulo, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "circulo."))
+        botonC.grid(row = 5, column = 5)
+        
+        cuadrado = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Cuadrado.png")
+        botonCu = Button(window, image = cuadrado, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "cuadrado."))
+        botonCu.grid(row = 5, column = 6)
+        
+        rombo = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Rombo.png")
+        botonR = Button(window, image = rombo, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "rombo."))
+        botonR.grid(row = 5, column = 7)
+        
+        hexagono = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Hexagono.png")
+        botonH = Button(window, image = hexagono, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "hexagono."))
+        botonH.grid(row = 5, column = 8)
+        
+        pentagono = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Pentagono.png")
+        botonP = Button(window, image = pentagono, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "pentagono."))
+        botonP.grid(row = 6, column = 4)
+        
+        estrella = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\estrella.png")
+        botonE = Button(window, image = estrella, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "estrella."))
+        botonE.grid(row = 6, column = 5)
+        
+        x = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\X.png")
+        botonX = Button(window, image = x, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "x."))
+        botonX.grid(row = 6, column = 6)
+        
+        pum = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Pum.png")
+        botonPu = Button(window, image = pum, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "pum."))
+        botonPu.grid(row = 6, column = 7)
+        
+        check = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Check.png")
+        botonCh = Button(window, image = check, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "check."))
+        botonCh.grid(row = 6, column = 8)
+        
         window.mainloop()
-
+    def imagSeleccionada(self, window, figura):
+        print(figura)
+        img = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Rombo.png")
+        
+        label = Label(window, image = img)  
+        label.grid(row = 0, column = 1)
+        
     def VentanaServidor(self, _window):
         _window.destroy()
         window = Tk()
