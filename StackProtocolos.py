@@ -49,7 +49,7 @@ class CapaAplicacion():
         _window.destroy()
         window = Tk()
         window.title("Cliente")
-        window.geometry("425x200+300+300")
+        window.geometry("800x400+300+300")
         
       
         label1 = Label(window, text = "")
@@ -84,9 +84,8 @@ class CapaAplicacion():
         
         #Cambiar direccion
         #image = PhotoImage(file = r"Imagenes\Triangulo.png")
-        image = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Triangulo.png")
-        image.zoom(300, 300)
-        botonf = Button(window, text = 'Click Me !', image = image, height = 40, width = 100)
+        image = PhotoImage(file = r"C:\Users\Luis Valverde\Documents\GitHub\TareaRedes\Imagenes\Triangulo.png")
+        botonf = Button(window, text = 'Click Me !', image = image, height = 65, width = 85)
         botonf.grid(row = 10, column = 1)
         
         botonAceptar.grid(row = 9, column = 1)
