@@ -190,15 +190,22 @@ class CapaAplicacion():
         window.mainloop()
         
     def mostrarMensaje(self, window, CR):
+        CP = CapaPresentacion()
+        
+        
         while(True):
                 if(CR.mensajeRecibido != ""):
-                    label = Label(window, text = "Mensaje recibido: " + CR.mensajeRecibido)
+                    CP.mensaje = CR.mensajeRecibido
+                    print(CP.decodificar(CP.mensaje))
+                    mensajeDecodificado = CP.decodificar(CP.mensaje)
+                    label = Label(window, text = "Mensaje recibido: " + mensajeDecodificado)
                     label.grid(row = 3, column = 0)
                     CR.mensajeRecibido = ""
                     label = Label(window, text = "Conexión realizada con éxito")
                     label.grid(row = 0, column = 0)
                     
-                
+                    
+        window.mainloop()      
     def ObtenerMensaje(self, texto, host_, puerto_):
         
         if(texto == "" or host_ == "" or puerto_ == ""):
@@ -211,88 +218,90 @@ class CapaAplicacion():
             print(puerto_)
          
             #enviar a capa de presentacion a codificar
+            CP = CapaPresentacion()
+            CP.mensaje = self.mensaje
             
             CR = CapaRed()
+            CR.texto = CP.codificar(CP.mensaje)
+            
             CR.modo = "cliente"
             CR.host = self.host
             CR.puerto = self.puerto
-            CR.texto = self.mensaje
             CR.definirModalidad()
 
 class CapaPresentacion():
     mensaje = ""
     
-    def encriptar(self, msg):
-        
-        #Variables
-         puerto = 44440
+    def codificar(self, msg):
+        indice = 0
+        cod = ""
+        while indice < len(msg):
+            
+            letra = msg[indice]
+            if(letra == "0"):
+                cod += "@#"
+            elif(letra == "1"):
+                cod += "$!"
+            elif(letra == "2"):
+                cod += "%*"
+            elif(letra == "3"):
+                cod += "&>"
+            elif(letra == "4"):
+                cod += "?<"
+            elif(letra == "5"):
+                cod += ";{"
+            elif(letra == "6"):
+                cod += ":}"
+            elif(letra == "7"):
+                cod += "./"
+            elif(letra == "8"):
+                cod += ".\\"
+            elif(letra == "9"):
+                cod += "||"
          
-         host = ""
-         i = 0
-         j = 0
-         d = ""
-         b = ""
-         c = ''
-         contenido = msg
-         print("Digite la clave: ")
+            indice += 1
+            
+        return cod
          
-         #limpiar
-         d = input()
-         print("Digite el host: ")
-         #limpiar
-         host = input()
-         while i<len(contenido):
-            c = contenido[i]
-            if (ord(c) >= 65 and ord(c) <= 90):
-                    c = ord(c) + (ord(d[j])-48)
-                    if c > 90:
-                            c = c + 64 - 90
-            elif ord(c) == 32:
-                    c = 126
-            b = b + chr(c)
-            i = i + 1
-            if j<2:
-                    j = j+1
-            else:
-                    j = 0                          
-         print(b)
-         iniciarCliente(host, puerto, b)
-
-         del host
-         del i
-         del j
-         del d
-         del b
-         del callable
+    def decodificar(self, cod):    
+    
+        indice = 0
+        cont=0
+        final = ""
+        letra = ""
+        decod = ""
+        
          
-    def desencriptar(mensaje, d):
-        i = 0
-        j = 0
-
-        b = ""
-
-        c = ''
-
-        contenido = mensaje
-        
-        while i < len(contenido):
-                c = contenido[i]
-                if (ord(c) >= 65 and ord(c) <= 90):
-                        c = ord(c) - (ord(d[j])-48)
-                        if c < 65:
-                                c = c - 64 + 90
-                elif ord(c) == 126:
-                        c = 32
-                b = b + chr(c)
-                i = i + 1
-                if j<2:
-                        j = j+1
-                else:
-                        j = 0
-        print (b)
-        return b
-        
-        
+        while(indice <= len(cod)):
+            if(cont%2 == 0 and cont > 0):
+                
+                letra = cod[indice-2]
+                letra = letra + cod[indice-1]
+                
+                if(letra == "@#"):
+                    decod += "0"
+                elif(letra == "$!"):
+                    decod += "1"
+                elif(letra == "%*"):
+                    decod += "2"
+                elif(letra == "&>"):
+                    decod += "3"
+                elif(letra == "?<"):
+                    decod += "4"
+                elif(letra == ";{"):
+                    decod += "5"
+                elif(letra == ":}"):
+                    decod += "6"
+                elif(letra == "./"):
+                    decod += "7"
+                elif(letra == ".\\"):
+                    decod += "8"
+                elif(letra == "||"):
+                    decod += "9"
+                    
+            cont += 1 
+            indice +=1
+        return decod
         
 class CapaRed():
     
@@ -301,7 +310,6 @@ class CapaRed():
     texto = ""
     modo = ""
     mensajeRecibido = ""
-    msgReceived = False
     
     
     def definirModalidad(self):
@@ -345,7 +353,6 @@ class CapaRed():
         
     def iniciarServidor(self):
         
-        self.msgReceived = False
         # Create a TCP/IP socket
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -376,8 +383,8 @@ class CapaRed():
 #############main###############
 CA = CapaAplicacion()
 CA.graf()
-CP = CapaPresentacion
-CP.mensaje = CA.mensaje
+# CP = CapaPresentacion
+# CP.mensaje = CA.mensaje
 
 
     
