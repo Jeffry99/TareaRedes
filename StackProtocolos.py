@@ -68,7 +68,7 @@ class CapaAplicacion():
         #TextboxMensaje
         texto = Entry(window, width = 30)
         texto.grid(row = 4, column = 1)
-        texto.insert(0, "Holiwis")
+        texto.insert(0, "aaa")
         #TextboxHost
         textoHost = Entry(window, width = 30)
         textoHost.grid(row = 5, column = 1)
@@ -80,7 +80,16 @@ class CapaAplicacion():
         #Boton
         botonAceptar = Button(window, text = "Aceptar", command = lambda: self.ObtenerMensaje(texto.get(),textoHost.get(),textoPuerto.get()))
         botonAceptar.grid(row = 9, column = 1)
-               
+        
+        
+        #Cambiar direccion
+        #image = PhotoImage(file = r"Imagenes\Triangulo.png")
+        image = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Triangulo.png")
+        image.zoom(300, 300)
+        botonf = Button(window, text = 'Click Me !', image = image, height = 40, width = 100)
+        botonf.grid(row = 10, column = 1)
+        
+        botonAceptar.grid(row = 9, column = 1)
         window.mainloop()
 
     def VentanaServidor(self, _window):
