@@ -10,7 +10,7 @@ class CapaAplicacion():
     host = ""
     puerto = 4440
     modo = ""
-    flag = False
+    contClick = 0
     def graf(self): 
         #Ventana
         window = Tk()
@@ -128,13 +128,16 @@ class CapaAplicacion():
         botonCh.grid(row = 6, column = 8)
         
         window.mainloop()
+        
     def imagSeleccionada(self, window, figura):
-        print(figura)
-        img = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Rombo.png")
-        
+        print(self.contClick)
+        img = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\\"+ figura + "png")   
         label = Label(window, image = img)  
-        label.grid(row = 0, column = 1)
+        label.place(x=self.contClick, y=300)
+        self.contClick = self.contClick + 100
         
+        
+        window.mainloop()
     def VentanaServidor(self, _window):
         _window.destroy()
         window = Tk()
