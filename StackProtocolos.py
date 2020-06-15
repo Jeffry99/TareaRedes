@@ -88,7 +88,7 @@ class CapaAplicacion():
         
         textoHost = Entry(frame1, width = 30)
         textoHost.grid(row = 5, column = 1)
-        textoHost.insert(0, "192.168.100.32")
+        #textoHost.insert(0, "")
 
         textoPuerto = Entry(frame1, width = 30)
         textoPuerto.grid(row = 6, column = 1)
