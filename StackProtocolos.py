@@ -5,6 +5,21 @@ import os
 import time
 import threading
 
+class FitoImage():
+    figura = ""
+    imagen = ""
+    label = ""
+    def __new__(self,figura, frame, cont):
+        
+         
+        self.imagen = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\\"+ figura + ".png")  
+        
+        self.label = Label(frame, image = self.imagen)  
+        
+        self.label.grid(row = 0, column = cont)
+        
+
+
 class CapaAplicacion():
     mensaje = ""
     mssg = ""
@@ -46,7 +61,7 @@ class CapaAplicacion():
         botonServidor.grid(row = 5, column = 4)
         window.mainloop()
         
-        
+
     def VentanaCliente(self, _window):
         _window.destroy()
         window = Tk()
@@ -171,9 +186,10 @@ class CapaAplicacion():
         _window.destroy()
         window = Tk()
         window.title("Servidor")
-        window.geometry("425x200+300+300")
-        
-        label = Label(window, text = "Esperando Conexión")
+        window.geometry("900x450+300+300")
+        frame0 = Frame(window)
+        frame0.grid(row = 0, column = 0)
+        label = Label(frame0, text = "Esperando Conexión")
         label.grid(row = 0, column = 0)
         
         CR = CapaRed()
@@ -184,28 +200,85 @@ class CapaAplicacion():
         t = threading.Thread(target=CR.definirModalidad)
         t.start()
         
-        t2 = threading.Thread(target = self.mostrarMensaje, args = (window, CR, ))
+        t2 = threading.Thread(target = self.mostrarMensaje, args = (window, CR, frame0, ))
         t2.start()
          
         window.mainloop()
         
-    def mostrarMensaje(self, window, CR):
-        CP = CapaPresentacion()
         
+        window.mainloop()
+    def mostrarMensaje(self, window, CR, frame_):
+        CP = CapaPresentacion()
+        frame = Frame(window)
+        frame.grid(row = 4, column = 0)
+        cont = 0
         
         while(True):
                 if(CR.mensajeRecibido != ""):
                     CP.mensaje = CR.mensajeRecibido
                     print(CP.decodificar(CP.mensaje))
                     mensajeDecodificado = CP.decodificar(CP.mensaje)
-                    label = Label(window, text = "Mensaje recibido: " + mensajeDecodificado)
+                    label = Label(frame_, text = "Mensaje recibido: " + mensajeDecodificado)
                     label.grid(row = 3, column = 0)
                     CR.mensajeRecibido = ""
-                    label = Label(window, text = "Conexión realizada con éxito")
+                    label = Label(frame_, text = "Conexión realizada con éxito")
                     label.grid(row = 0, column = 0)
                     
+                    indice = 0
+                    cont = 0
+                    while (indice < len(mensajeDecodificado)):
+                        letra = mensajeDecodificado[indice]
+                        
+                 
+                        print(letra)
+
+                        if(letra == "0"):
+                            figura = "Triangulo"
+   
+                        if(letra == "1"):
+                            figura = "Circulo"
+                            
+                        if(letra == "2"):
+                            figura = "Cuadrado"
+         
+                        if(letra == "3"):
+                            figura = "Rombo"       
+                          
+                        if(letra == "4"):
+                            figura = "Hexagono"
+                
+                        if(letra == "5"):
+                            figura = "Pentagono"
+                      
+                        if(letra == "6"):
+                            figura = "Estrella"
+                  
+                        if(letra == "7"):
+                            figura = "X"
+                            
+                        if(letra == "8"):
+                            figura = "Pum"
+                            
+                        if(letra == "9"):
+                            figura = "Check"
+                            
+                        #img1 = FitoImage()   
+                        #img1.make_fitoImage(figura)
+                        #img1 = new PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\\"+ figura + ".png")   
+                        #fitoImage = FitoImage(figura, frame, cont)
+                        #fitoImage.make_fitoImage(figura, frame, cont)
+                        
+                        img = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\\"+ figura + ".png") 
+                        label = Label(frame, image = img) 
+                        label.grid(row = 0, column = cont)
+                        
+                        time.sleep(1)
+                        
+                        indice +=1
+                        cont += 1
                     
-        window.mainloop()      
+        window.mainloop()
+        
     def ObtenerMensaje(self, texto, host_, puerto_):
         
         if(texto == "" or host_ == "" or puerto_ == ""):
@@ -227,6 +300,7 @@ class CapaAplicacion():
             CR.modo = "cliente"
             CR.host = self.host
             CR.puerto = self.puerto
+            
             CR.definirModalidad()
 
 class CapaPresentacion():
@@ -325,19 +399,21 @@ class CapaRed():
     def iniciarCliente(self):
         # Create a TCP/IP socket
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
         # Connect the socket to the port where the server is listening
         server_address = (self.host, 4440)
         print('connecting to {} port {}'.format(*server_address))
         
         try:
+            
             sock.connect(server_address)
+            
             # Send data
             message = self.texto.encode()
-            print(self.texto)
+            
             print('sending {!r}'.format(message))
+            
             sock.sendall(message)
-
+            
             # Look for the response
             amount_received = 0
             amount_expected = len(message)
