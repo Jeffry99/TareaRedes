@@ -5,20 +5,7 @@ import os
 import time
 import threading
 
-class FitoImage():
-    figura = ""
-    imagen = ""
-    label = ""
-    def __new__(self,figura, frame, cont):
         
-         
-        self.imagen = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\\"+ figura + ".png")  
-        
-        self.label = Label(frame, image = self.imagen)  
-        
-        self.label.grid(row = 0, column = cont)
-        
-
 
 class CapaAplicacion():
     mensaje = ""
@@ -109,43 +96,43 @@ class CapaAplicacion():
 
         #Cambiar direccion
         #image = PhotoImage(file = r"Imagenes\Triangulo.png")
-        triangulo = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Triangulo.png")
+        triangulo = PhotoImage(file = r"Imagenes\Triangulo.png")
         botonT = Button(frame1, image = triangulo, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "Triangulo.", frame2, "0"))
         botonT.grid(row = 5, column = 4)
         
-        circulo = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Circulo.png")
+        circulo = PhotoImage(file = r"Imagenes\Circulo.png")
         botonC = Button(frame1, image = circulo, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "circulo.", frame2, "1"))
         botonC.grid(row = 5, column = 5)
         
-        cuadrado = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Cuadrado.png")
+        cuadrado = PhotoImage(file = r"Imagenes\Cuadrado.png")
         botonCu = Button(frame1, image = cuadrado, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "cuadrado.", frame2, "2"))
         botonCu.grid(row = 5, column = 6)
         
-        rombo = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Rombo.png")
+        rombo = PhotoImage(file = r"Imagenes\Rombo.png")
         botonR = Button(frame1, image = rombo, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "rombo.", frame2, "3"))
         botonR.grid(row = 5, column = 7)
         
-        hexagono = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Hexagono.png")
+        hexagono = PhotoImage(file = r"Imagenes\Hexagono.png")
         botonH = Button(frame1, image = hexagono, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "hexagono.", frame2, "4"))
         botonH.grid(row = 5, column = 8)
         
-        pentagono = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Pentagono.png")
+        pentagono = PhotoImage(file = r"Imagenes\Pentagono.png")
         botonP = Button(frame1, image = pentagono, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "pentagono.", frame2, "5"))
         botonP.grid(row = 6, column = 4)
         
-        estrella = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\estrella.png")
+        estrella = PhotoImage(file = r"Imagenes\estrella.png")
         botonE = Button(frame1, image = estrella, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "estrella.", frame2, "6"))
         botonE.grid(row = 6, column = 5)
         
-        x = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\X.png")
+        x = PhotoImage(file = r"C:Imagenes\X.png")
         botonX = Button(frame1, image = x, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "x.", frame2, "7"))
         botonX.grid(row = 6, column = 6)
         
-        pum = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Pum.png")
+        pum = PhotoImage(file = r"Imagenes\Pum.png")
         botonPu = Button(frame1, image = pum, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "pum.", frame2, "8"))
         botonPu.grid(row = 6, column = 7)
         
-        check = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\Check.png")
+        check = PhotoImage(file = r"Imagenes\Check.png")
         botonCh = Button(frame1, image = check, height = 65, width = 85, command = lambda: self.imagSeleccionada(window, "check.", frame2, "9"))
         botonCh.grid(row = 6, column = 8)
         
@@ -168,7 +155,7 @@ class CapaAplicacion():
         
     def imagSeleccionada(self, window, figura, frame, cod):
         if(self.contClick < 7):
-            img = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\\"+ figura + "png")   
+            img = PhotoImage(file = r"Imagenes\\"+ figura + "png")   
             labelImagen = Label(frame, image = img)
             labelImagen.grid(row = 0, column = self.contClick)
             
@@ -268,7 +255,7 @@ class CapaAplicacion():
                         #fitoImage = FitoImage(figura, frame, cont)
                         #fitoImage.make_fitoImage(figura, frame, cont)
                         
-                        img = PhotoImage(file = r"C:\Users\jeffr\Desktop\Tarea Redes\TareaRedes\Imagenes\\"+ figura + ".png") 
+                        img = PhotoImage(file = r"Imagenes\\"+ figura + ".png") 
                         label = Label(frame, image = img) 
                         label.grid(row = 0, column = cont)
                         
